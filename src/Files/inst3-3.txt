@@ -1,0 +1,9 @@
+c CNF generated data
+c 3 promennych a 3 klauzuli
+p cnf 4 3
+-1 2 -3 0
+1 3 4 0
+-1 -2 -4 0
+%
+0
+
