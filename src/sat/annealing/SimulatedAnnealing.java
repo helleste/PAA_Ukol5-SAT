@@ -4,6 +4,7 @@ import java.util.BitSet;
 import java.util.Random;
 
 import sat.solver.Instance;
+import sat.solver.State;
 
 public class SimulatedAnnealing {
 	
@@ -31,7 +32,7 @@ public class SimulatedAnnealing {
 		while (temperature > ENDING_TEMPERATURE) {
 			for (int m = 0; m < M; m++) {
 				state = getNextState();
-				System.out.println(state.toString());
+				//System.out.println(state.toString());
 				
 				if ((state.getSumWeight() > bestState.getSumWeight()) && state.getFormulaSatisfied())
 					bestState = state;

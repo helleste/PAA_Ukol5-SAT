@@ -1,4 +1,4 @@
-package sat.annealing;
+package sat.solver;
 
 import java.util.ArrayList;
 import java.util.BitSet;

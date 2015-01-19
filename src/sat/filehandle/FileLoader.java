@@ -28,6 +28,7 @@ public class FileLoader {
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			
 			String strLine;
+			boolean headerJustParsed = false;
 			Formula formula = new Formula();
 			
 			// Read till you reach EOF
@@ -39,6 +40,7 @@ public class FileLoader {
 					break;
 				case "p":
 					parseHeader(lineData);
+					headerJustParsed = true;
 					instance.setWeights(generateWeights());
 					break;
 				case "0":
@@ -46,6 +48,14 @@ public class FileLoader {
 				case "%":
 					break;
 				case "":
+					if (headerJustParsed) {
+						lineData[0] = lineData[1];
+						lineData[1] = lineData[2];
+						lineData[2] = lineData[3];
+						lineData[3] = "0";
+						formula.addClause(parseData(lineData, instance.getWeights()));
+						headerJustParsed = false;
+					}
 					break;
 				default:
 					formula.addClause(parseData(lineData, instance.getWeights()));
@@ -63,7 +73,6 @@ public class FileLoader {
 			return this.instance;
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
 			return null;
@@ -73,9 +82,10 @@ public class FileLoader {
 	
 	private void parseHeader(String[] lineData) {
 		instance.setnVariables(Integer.parseInt(lineData[2]));
-		instance.setnClauses(Integer.parseInt(lineData[3]));
+		instance.setnClauses(Integer.parseInt(lineData[4]));
 	}
 	
+	// TODO move to Instance?
 	private ArrayList<Integer> generateWeights() {
 		ArrayList<Integer> weights = new ArrayList<Integer>(instance.getnVariables());
 		weights.add(0,0);
