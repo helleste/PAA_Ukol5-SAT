@@ -14,19 +14,20 @@ import sat.solver.Instance;
 
 public class ResultWriter {
 	
-	private String filename = "src/Files/uf20-0100.cnf";
+	private String oldFilename;
 	
 	// Parse the file and create instance from the data
-	public void writeResultFile(Instance instance, String result) {
+	public void writeResultFile(Instance instance, String result, int filenumber) {
 		
 		try {
-			File newFile = new File(filename.replace("cnf", "txt"));
+			this.oldFilename = "src/Files/uf" + instance.getnVariables() +"-0" + filenumber + ".cnf";
+			File newFile = new File(oldFilename.replace("cnf", "txt"));
 			
 			// if file doesnt exists, then create it
 			if (!newFile.exists()) {
 				newFile.createNewFile();
 			}
-			FileInputStream fstream = new FileInputStream(filename);
+			FileInputStream fstream = new FileInputStream(oldFilename);
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			FileWriter fw = new FileWriter(newFile.getAbsoluteFile());

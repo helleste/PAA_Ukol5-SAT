@@ -16,8 +16,24 @@ import sat.solver.Instance;
 
 public class FileLoader {
 
-	private String filename = "src/Files/uf20-0100.cnf";
+	private String filename;
 	private Instance instance = new Instance();
+	private int literals;
+	private int clauses;
+	
+	public FileLoader(int literals, int clauses) {
+		this.literals = literals;
+		this.clauses = clauses;
+		this.filename = "src/Files/uf" + literals +"-01.cnf";
+//		System.out.println(this.filename);
+	}
+	
+	public FileLoader(int literals, int clauses, int filenumber) {
+		this.literals = literals;
+		this.clauses = clauses;
+		this.filename = "src/Files/uf" + literals +"-0" + filenumber + ".cnf";
+//		System.out.println(this.filename);
+	}
 	
 	// Parse the file and create instance from the data
 	public Instance loadInstance() {
@@ -29,6 +45,7 @@ public class FileLoader {
 			
 			String strLine;
 			boolean headerJustParsed = false;
+			int clausesParsed = 0;
 			Formula formula = new Formula();
 			
 			// Read till you reach EOF
@@ -55,22 +72,27 @@ public class FileLoader {
 						lineData[3] = "0";
 						formula.addClause(parseData(lineData, instance.getWeights()));
 						headerJustParsed = false;
+						clausesParsed++;
 					}
 					break;
 				default:
 					formula.addClause(parseData(lineData, instance.getWeights()));
+					clausesParsed++;
+					if (clausesParsed == clauses) {
+						// Add Formula to instance
+						this.instance.setFormula(formula);
+						
+						// Close the input stream
+						in.close();
+						
+						// Returns an instance
+						return this.instance;
+					}
 					break;
 				}
 			}
 			
-			// Add Formula to instance
-			this.instance.setFormula(formula);
-			
-			// Close the input stream
-			in.close();
-			
-			// Returns an instance
-			return this.instance;
+			return null;
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -81,8 +103,10 @@ public class FileLoader {
 	
 	
 	private void parseHeader(String[] lineData) {
-		instance.setnVariables(Integer.parseInt(lineData[2]));
-		instance.setnClauses(Integer.parseInt(lineData[4]));
+		/*instance.setnVariables(Integer.parseInt(lineData[2]));
+		instance.setnClauses(Integer.parseInt(lineData[4]));*/
+		instance.setnVariables(literals);
+		instance.setnClauses(clauses);
 	}
 	
 	// TODO move to Instance?

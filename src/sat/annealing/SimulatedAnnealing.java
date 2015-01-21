@@ -20,19 +20,16 @@ public class SimulatedAnnealing {
 		this.instance = instance;
 		state = new State(0);
 		bestState = new State(0);
-		//M = 10 * instance.getnVariables(); // TODO Find a correct parameter
-		M = 2500;
+		M = 150 * instance.getnVariables(); // TODO Find a correct parameter
 		
 		setInitState();
 		temperature = setInitTemperature();
 		ENDING_TEMPERATURE = setEndingTemperature();
 		COOLING_FACTOR = setCoolingFactor();
-		//System.out.println(COOLING_FACTOR);
 		
 		while (temperature > ENDING_TEMPERATURE) {
 			for (int m = 0; m < M; m++) {
 				state = getNextState();
-				//System.out.println(state.toString());
 				
 				if ((state.getSumWeight() > bestState.getSumWeight()) && state.getFormulaSatisfied())
 					bestState = state;
@@ -86,20 +83,17 @@ public class SimulatedAnnealing {
 		return newState;
 	}
 	
-	// TODO find a correct parameter
 	private double setInitTemperature() {
-		return 2000;
+		return instance.getnVariables()*150;
 	}
 	
-	// TODO find a correct parameter
 	private double setEndingTemperature() {
-		return 50;
+		return instance.getnVariables() * 0.8;
 		
 	}
 	
-	// TODO find a correct parameter
 	private double setCoolingFactor() {
-		return 0.9;
+		return 0.99;
 			
 	}
 	
